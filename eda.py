@@ -3,6 +3,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from responsible_gaming_ml.synthetic_data import generate_dataset
+
 CSV_PATH = Path(__file__).resolve().parent / "data" / "players_features.csv"
 FEATURE_LABELS = {
     "deposits_7d": "Total deposit amount over 7 days",
@@ -14,7 +16,20 @@ FEATURE_LABELS = {
 INTEGER_FEATURES = {"night_sessions", "deposit_frequency"}
 
 
+def analyze_target_distribution() -> None:
+    dataset = generate_dataset()
+    target = dataset["target"]
+    target_counts = target.value_counts()
+    target_proportions = target.value_counts(normalize=True)
+
+    print("Target counts:")
+    print(target_counts.to_string())
+    print("\nTarget proportions:")
+    print(target_proportions.to_string())
+
+
 def main() -> None:
+    analyze_target_distribution()
     df = pd.read_csv(CSV_PATH)
 
     for feature, label in FEATURE_LABELS.items():
